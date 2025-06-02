@@ -1,0 +1,51 @@
+spring:
+  application:
+    name: agenda-sus-api-kt
+  h2:
+    console:
+      enabled: true
+      path: /h2
+  datasource:
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+
+
+
+
+
+
+#  security:
+#    oauth2:
+#      resourceserver:
+#        jwt:
+#          issuer-uri: http://localhost:8080/realms/agenda-sus
+#      client:
+#        registration:
+#          keycloak:
+#            client-id: agenda-sus-api
+#            client-secret: zI9iwa8COOUMX7ufGFyJPzb9gY3s0m6B
+#            authorization-grant-type: client_credentials
+#        provider:
+#          keycloak:
+#            issuer-uri: http://localhost:8080/realms/agenda-sus
+#
+#keycloak:
+#  realm: agenda-sus
+#  auth-server-url: http://localhost:8080
+#  client-id: agenda-sus-api
+#  client-secret: zI9iwa8COOUMX7ufGFyJPzb9gY3s0m6B
+#
+#logging:
+#  level:
+#    br.com.silviofrancoms: DEBUG

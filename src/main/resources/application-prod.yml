@@ -1,0 +1,47 @@
+spring:
+  application:
+    name: agenda-sus-api-kt
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/AGENDA_SUS?useTimeZone=true&serverTimezone=UTC
+    username: root
+    password: 1234
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    open-in-view: false
+
+
+
+
+
+
+
+
+
+
+#  security:
+#    oauth2:
+#      resourceserver:
+#        jwt:
+#          issuer-uri: http://localhost:8080/realms/agenda-sus
+#      client:
+#        registration:
+#          keycloak:
+#            client-id: agenda-sus-api
+#            client-secret: zI9iwa8COOUMX7ufGFyJPzb9gY3s0m6B
+#            authorization-grant-type: client_credentials
+#        provider:
+#          keycloak:
+#            issuer-uri: http://localhost:8080/realms/agenda-sus
+#
+#keycloak:
+#  realm: agenda-sus
+#  auth-server-url: http://localhost:8080
+#  client-id: agenda-sus-api
+#  client-secret: zI9iwa8COOUMX7ufGFyJPzb9gY3s0m6B
+
+#logging:
+#  level:
+#    root: warn
