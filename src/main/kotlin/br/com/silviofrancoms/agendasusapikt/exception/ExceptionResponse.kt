@@ -1,4 +1,4 @@
-package br.com.silviofrancoms.agendasusapikt.exceptions
+package br.com.silviofrancoms.agendasusapikt.exception
 
 class ExceptionResponse(
     val timestamp: String,

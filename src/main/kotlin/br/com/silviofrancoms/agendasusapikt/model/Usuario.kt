@@ -49,6 +49,9 @@ data class Usuario(
     @Column(name = "aceita_notificacoes")
     var aceitaNotificacoes: Boolean = false,
 
+    @Column(name = "roles")
+    var roles: String = "USUARIO",
+
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "data_criacao", updatable = false)

@@ -5,7 +5,6 @@ import br.com.silviofrancoms.agendasusapikt.model.Genero
 import java.util.*
 
 data class UsuarioVO(
-
     val id: Long? = null,
     var nomeCompleto: String? = null,
     var cpf: String? = null,
@@ -18,7 +17,7 @@ data class UsuarioVO(
     var endereco: Endereco? = null,
     var aceitaTermos: Boolean = false,
     var aceitaNotificacoes: Boolean = false,
+    var roles: String? = null,
     val dataCriacao: Date? = null,
     val dataAtualizacao: Date? = null
-
 )
