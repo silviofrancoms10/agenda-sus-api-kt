@@ -5,9 +5,10 @@ import br.com.silviofrancoms.agendasusapikt.exception.ResourceNotFoundException
 import br.com.silviofrancoms.agendasusapikt.mapper.DozerMapper
 import br.com.silviofrancoms.agendasusapikt.model.Usuario
 import br.com.silviofrancoms.agendasusapikt.model.data.vo.UsuarioVO
+import br.com.silviofrancoms.agendasusapikt.model.data.vo.EnderecoVO // Adicionar esta importação
 import br.com.silviofrancoms.agendasusapikt.repository.UsuarioRepository
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder // Ou sua biblioteca de hash preferida
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.logging.Logger
@@ -18,22 +19,32 @@ class UsuarioService @Autowired constructor(
 ) {
 
     private val logger = Logger.getLogger(UsuarioService::class.java.name)
-    private val passwordEncoder = BCryptPasswordEncoder() // Inicialize seu codificador de senha
+    private val passwordEncoder = BCryptPasswordEncoder()
 
     @Transactional
     fun create(usuarioVO: UsuarioVO): UsuarioVO {
         logger.info("Criando um novo usuário!")
 
-        // 1. Converte VO para Entidade
-        val usuarioEntity: Usuario = DozerMapper.parseObject(usuarioVO, Usuario::class.java)
+        // 1. Mapeia o UsuarioVO para Usuario (sem o Endereco por enquanto)
+        // Criamos uma cópia do UsuarioVO sem o Endereco para o mapeamento inicial.
+        // E garantimos que 'roles' nunca seja nulo para o mapeador.
+        val usuarioVOToMap = usuarioVO.copy(
+            endereco = null,
+            roles = usuarioVO.roles ?: "USUARIO" // <-- ESTA É A LINHA CRÍTICA
+        )
+        val usuarioEntity: Usuario = DozerMapper.parseObject(usuarioVOToMap, Usuario::class.java)
 
         // 2. Faz o hash da senha antes de salvar
         usuarioEntity.senha = passwordEncoder.encode(usuarioVO.senha)
 
-        // 3. Define o relacionamento bidirecional para Endereco
-        usuarioEntity.endereco?.usuario = usuarioEntity
+        // 3. Mapeia o EnderecoVO para Endereco e define o relacionamento
+        usuarioVO.endereco?.let { enderecoVOFromVO ->
+            val enderecoEntity: Endereco = DozerMapper.parseObject(enderecoVOFromVO, Endereco::class.java)
+            enderecoEntity.usuario = usuarioEntity // Vincula o endereço ao usuário
+            usuarioEntity.endereco = enderecoEntity // Vincula o usuário ao endereço
+        }
 
-        // 4. Salva a entidade
+        // 4. Salva a entidade Usuario (que agora tem o Endereco vinculado e será cascateado)
         val savedUsuario = repository.save(usuarioEntity)
 
         // 5. Converte a Entidade salva de volta para VO e retorna
@@ -75,9 +86,11 @@ class UsuarioService @Autowired constructor(
         entity.telefone = usuarioVO.telefone
         entity.aceitaTermos = usuarioVO.aceitaTermos
         entity.aceitaNotificacoes = usuarioVO.aceitaNotificacoes
+        entity.roles = usuarioVO.roles ?: "USUARIO" // Atualiza roles, com default se nulo
 
         // Atualiza detalhes do Endereco se fornecidos
         usuarioVO.endereco?.let { enderecoVO ->
+            // Se o endereço já existir para o usuário, atualize-o.
             entity.endereco?.apply {
                 cep = enderecoVO.cep
                 rua = enderecoVO.rua
@@ -87,16 +100,17 @@ class UsuarioService @Autowired constructor(
                 cidade = enderecoVO.cidade
                 uf = enderecoVO.uf
             } ?: run {
-                // Se o endereço não existir, cria um novo e o vincula
+                // Se o endereço não existir, cria um novo e o vincula.
                 val newEndereco = DozerMapper.parseObject(enderecoVO, Endereco::class.java)
-                newEndereco.usuario = entity // Vincula ao usuário
-                entity.endereco = newEndereco
+                newEndereco.usuario = entity // Vincula o novo endereço ao usuário
+                entity.endereco = newEndereco // Atribui o novo endereço ao usuário
             }
         }
 
         val updatedUsuario = repository.save(entity)
         return DozerMapper.parseObject(updatedUsuario, UsuarioVO::class.java)
     }
+
 
     @Transactional
     fun delete(id: Long) {

@@ -18,10 +18,14 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  jackson:
+    date-format: dd/MM/yyyy
+    time-zone: America/Campo_Grande
 
 jwt:
-  secret: ˜SuaChaveSecretaMuitoLongaESeguraAquiParaTestesNuncaUseEssaEmProducaoPorFavor1234567890ABCDEF
+  secret: SuaChaveSecretaMuitoLongaESeguraAquiParaTestesNuncaUseEssaEmProducaoPorFavor1234567890ABCDEF
   expiration: 86400000
+
 
 
 
