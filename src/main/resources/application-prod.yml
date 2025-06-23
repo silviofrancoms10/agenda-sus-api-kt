@@ -11,6 +11,14 @@ spring:
       ddl-auto: update
     show-sql: false
     open-in-view: false
+  jackson:
+    date-format: dd/MM/yyyy
+    time-zone: America/Campo_Grande
+
+jwt:
+  secret: SuaChaveSecretaMuitoLongaESeguraAquiParaTestesNuncaUseEssaEmProducaoPorFavor1234567890ABCDEF
+  expiration: 86400000
+
 
 
 

@@ -1,12 +1,14 @@
 // AuthController.kt (sem alterações necessárias, mas mostrando para contexto)
 package br.com.silviofrancoms.agendasusapikt.controller
 
+import br.com.silviofrancoms.agendasusapikt.repository.UsuarioRepository
 import br.com.silviofrancoms.agendasusapikt.security.jwt.JwtTokenUtil
 import org.springframework.http.ResponseEntity
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
+import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -19,7 +21,9 @@ data class AuthenticationRequest(
 )
 
 data class AuthenticationResponse(
-    val token: String
+    val token: String,
+    val userId: Long,
+    val nomeCompleto: String
 )
 
 @RestController
@@ -27,7 +31,8 @@ data class AuthenticationResponse(
 class AuthController(
     private val authenticationManager: AuthenticationManager,
     private val userDetailsService: UserDetailsService,
-    private val jwtTokenUtil: JwtTokenUtil
+    private val jwtTokenUtil: JwtTokenUtil,
+    private val usuarioRepository: UsuarioRepository
 ) {
     private val logger = Logger.getLogger(AuthController::class.java.name)
 
@@ -46,7 +51,10 @@ class AuthController(
         val userDetails: UserDetails = userDetailsService.loadUserByUsername(authenticationRequest.email)
         val jwt: String = jwtTokenUtil.generateToken(userDetails)
 
+        val usuarioLogado = usuarioRepository.findByEmail(authenticationRequest.email)
+            ?: throw UsernameNotFoundException("Usuário nao encontrado no banco de dados após authenticação.")
+
         logger.info("Login bem-sucedido para o email: ${authenticationRequest.email}")
-        return ResponseEntity.ok(AuthenticationResponse(jwt))
+        return ResponseEntity.ok(AuthenticationResponse(jwt, usuarioLogado.id!!, usuarioLogado.nomeCompleto!!))
     }
 }

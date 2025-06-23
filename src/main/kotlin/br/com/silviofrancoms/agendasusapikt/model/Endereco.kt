@@ -11,7 +11,7 @@ import java.util.Date
 data class Endereco(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null,
+    var id: Long? = null,
 
     var cep: String? = null,
     var rua: String? = null,
@@ -29,7 +29,7 @@ data class Endereco(
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "data_criacao", updatable = false)
-    val dataCriacao: Date? = null,
+    var dataCriacao: Date? = null,
 
     @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
