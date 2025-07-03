@@ -80,6 +80,8 @@ class SecurityConfig(
 
                     .requestMatchers("/api/usuarios/{id}").hasAnyRole("USUARIO", "ADMIN") // Usuário pode ver a si mesmo, admin pode ver qualquer um
                     .requestMatchers("/api/usuarios/**").hasAnyRole("USUARIO", "ADMIN") // GET (all), PUT, DELETE exigem ADMIN
+                    .requestMatchers("/api/consultas/{id}").hasAnyRole("USUARIO", "ADMIN")
+                    .requestMatchers("/api/consultas/**").hasAnyRole("USUARIO", "ADMIN")
                     .anyRequest().authenticated() // Qualquer outra requisição que não foi explicitamente permitida precisa ser autenticada
             }
             .authenticationProvider(authenticationProvider())
