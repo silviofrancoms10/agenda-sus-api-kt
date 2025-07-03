@@ -19,15 +19,17 @@ jwt:
   secret: SuaChaveSecretaMuitoLongaESeguraAquiParaTestesNuncaUseEssaEmProducaoPorFavor1234567890ABCDEF
   expiration: 86400000
 
-
-
-
-
-
-
-
-
-
+#logging:
+#  level:
+#    org:
+#      springframework:
+#        web: DEBUG
+#      hibernate:
+#        SQL: DEBUG
+#        type:
+#          descriptor:
+#            sql:
+#              BasicBinder: TRACE
 
 #  security:
 #    oauth2:

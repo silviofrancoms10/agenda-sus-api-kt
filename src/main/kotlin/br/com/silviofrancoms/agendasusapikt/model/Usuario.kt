@@ -1,7 +1,9 @@
 package br.com.silviofrancoms.agendasusapikt.model
 
 import com.fasterxml.jackson.annotation.JsonFormat
+import com.fasterxml.jackson.annotation.JsonIdentityInfo
 import com.fasterxml.jackson.annotation.JsonManagedReference
+import com.fasterxml.jackson.annotation.ObjectIdGenerators
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
@@ -9,6 +11,10 @@ import java.io.Serializable
 import java.util.*
 
 @Entity(name = "usuario")
+@JsonIdentityInfo(
+    generator = ObjectIdGenerators.PropertyGenerator::class,
+    property = "id"
+)
 data class Usuario(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,7 +48,7 @@ data class Usuario(
     var telefone: String? = null,
 
     @OneToOne(mappedBy = "usuario", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    @JsonManagedReference
+    @JsonManagedReference("usuario-endereco")
     var endereco: Endereco? = null,
 
     @Column(name = "aceita_termos")
